@@ -2,7 +2,7 @@ import { Dimensions, FlatList, Animated, LayoutChangeEvent, View } from 'react-n
 import {Text, Button} from "@ui-kitten/components"
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Screen } from '../components/Screen'
 import {theme} from "../theme"
 import Card from '../components/Card'
@@ -10,13 +10,26 @@ import { HEADERHEIGHT } from '../constance'
 import { AnimatedListHeader } from '../components/AnimatedListHeader'
 import MapView from 'react-native-maps'
 import Map from '../components/Map'
+import { SearchScreenParams } from '../types'
 
 const LISTMARGIN = 10
 // const WIDTH = Dimensions.get("screen").width - LISTMARGIN * 2
 
-const SearchScreen = () => {
+const SearchScreen = ({route}:{route:{params: SearchScreenParams}}) => {
   const [scrollAnimation] = useState(new Animated.Value(0))
   const [mapShown,setMapShown] = useState<boolean>(false) 
+  const mapRef = useRef<MapView | null>(null)
+
+  useEffect(() => {
+    if (route.params) {
+      mapRef?.current?.animateCamera({
+        center: {
+          latitude: Number(route.params.lat),
+          longitude: Number(route.params.lon)
+        }
+      })
+    }
+  }, [route])
 
   const properties = [{
     id:1,
@@ -28,7 +41,7 @@ const SearchScreen = () => {
     rentHigh:6582,
     bedroomLow: 1, 
     bedroomHigh: 5,
-    name: "The Hamiltons",
+    name: "1 Great",
     street: "429 Zero No",
     city: "Warsaw",
     state: "Floryda",
@@ -47,7 +60,7 @@ const SearchScreen = () => {
     rentHigh:6582,
     bedroomLow: 1, 
     bedroomHigh: 5,
-    name: "The Hamiltonssssss",
+    name: "2 Fantastic",
     street: "429 Zero No",
     city: "Warsaw",
     state: "Floryda",
@@ -66,7 +79,7 @@ const SearchScreen = () => {
     rentHigh:6582,
     bedroomLow: 1, 
     bedroomHigh: 5,
-    name: "The Hamiltonssssss",
+    name: "3 Superancko",
     street: "429 Zero No",
     city: "Warsaw",
     state: "Floryda",
@@ -85,7 +98,7 @@ const SearchScreen = () => {
     rentHigh:6582,
     bedroomLow: 1, 
     bedroomHigh: 5,
-    name: "The Hamiltonssssss",
+    name: "4 Fanticomo",
     street: "429 Zero No",
     city: "Warsaw",
     state: "Floryda",
@@ -104,7 +117,7 @@ const SearchScreen = () => {
     rentHigh:6582,
     bedroomLow: 1, 
     bedroomHigh: 5,
-    name: "The Hamiltonssssss",
+    name: "5 Simo simo",
     street: "429 Zero No",
     city: "Warsaw",
     state: "Floryda",
@@ -123,7 +136,7 @@ const SearchScreen = () => {
     rentHigh:6582,
     bedroomLow: 1, 
     bedroomHigh: 5,
-    name: "The Hamiltonssssss",
+    name: "6 Elo siema",
     street: "429 Zero No",
     city: "Warsaw",
     state: "Floryda",
@@ -140,9 +153,21 @@ const SearchScreen = () => {
   
   return (
     <Screen style={{marginHorizontal: LISTMARGIN}}>
-      <AnimatedListHeader scrollAnimation={scrollAnimation} setMapShown={setMapShown} mapShown={mapShown}/>
+      <AnimatedListHeader scrollAnimation={scrollAnimation} setMapShown={setMapShown} mapShown={mapShown} location={route.params ? route.params.location : "Find a location"}/>
       { mapShown ?
-<Map properties={properties}/> :  <Animated.FlatList 
+<Map 
+properties={properties} 
+mapRef={mapRef}
+initialRegion={
+  route.params ? 
+  {
+    latitude: Number(route.params.lat),
+    longitude: Number(route.params.lon),
+    latitudeDelta: 0.4,
+    longitudeDelta: 0.4,
+  } : undefined
+}
+/> :  <Animated.FlatList 
       onScroll={Animated.event([{
         nativeEvent: {
           contentOffset: {

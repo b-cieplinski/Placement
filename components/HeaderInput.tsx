@@ -1,9 +1,12 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { useNavigation } from "@react-navigation/native"
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { theme } from "../theme"
 
-export const HeaderInput = () => {
-    return <TouchableOpacity onPress={() => console.log("navigate to inputscreen")} style={styles.container}>
+
+export const HeaderInput = ({location} : {location: string} ) => {
+    const navigation = useNavigation()
+    return <TouchableOpacity onPress={() => navigation.navigate("FindLocations")} style={styles.container}>
     <View style={{flexDirection: "row", alignItems: "center"}}>
     <MaterialCommunityIcons name="magnify" color={theme["color-primary-500"]} size={28}/>
     <Text style={styles.text}>Find a Location</Text>

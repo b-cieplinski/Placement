@@ -1,17 +1,26 @@
 import { Platform, StyleSheet, Text, View } from 'react-native'
 import React, { useRef, useState } from 'react'
-import MapView from 'react-native-maps'
+import MapView, { Region } from 'react-native-maps'
 import { Property } from '../types/property'
 import MapMarker from './MapMarker'
 import { theme } from '../theme'
 import { useNavigation } from '@react-navigation/native'
 import Card from './Card'
 
-const Map = ({properties}:{properties: Property[]}) => {
+const Map = ({properties, mapRef, initialRegion}:{properties: Property[]; mapRef: React.MutableRefObject<MapView | null>; initialRegion?: Region | undefined;}) => {
 
     const [activeIndex, setActiveIndex] = useState(-1)
-    const mapRef = useRef<MapView | null>(null)
+
     const navigation = useNavigation()
+
+    const unFocusProperty = () => {
+        setActiveIndex(-1);
+        navigation.setOptions({tabBarStyle: {display: "flex"}})
+    }
+
+    const handleMapPress = () => {
+        if (Platform.OS === "android") unFocusProperty();
+    }
 
     const handleMarkerPress = (index: number) => {
         if (Platform.OS === "ios") {
@@ -25,7 +34,7 @@ const Map = ({properties}:{properties: Property[]}) => {
 
   return (
     <View style={styles.container}>
-    <MapView style={styles.mapcontainer}>
+    <MapView style={styles.mapcontainer} ref={mapRef} userInterfaceStyle={"light"} onPress={handleMapPress} initialRegion={initialRegion ? initialRegion: undefined}>
         {properties.map((i, index) => <MapMarker lat={i.lat} lng={i.lng} color={activeIndex === index ? theme["color-info-400"] : theme["color-primary-500"]} onPress={() => handleMarkerPress(index)}/>)}
     </MapView>
     {activeIndex > -1 && (<Card property={properties[activeIndex]} style={styles.card}/>)}
@@ -41,6 +50,9 @@ const styles = StyleSheet.create({
     card: {
         position: "absolute",
         bottom: 10,
-        height: 360
+        height: 360,
+        backgroundColor: "#ffffff",
+        width: 500,
+        marginHorizontal:6 
     }
 })

@@ -9,7 +9,7 @@ import HeaderFilterButtons from "./HeaderFilterButtons"
 import { HeaderInput } from "./HeaderInput"
 import HeaderLocations from "./HeaderLocations"
 
-export const AnimatedListHeader = ({scrollAnimation, setMapShown, mapShown}: {scrollAnimation: Animated.Value; mapShown: boolean; setMapShown: (bool: boolean) => void}) => {
+export const AnimatedListHeader = ({scrollAnimation, setMapShown, mapShown, location}: {location:string; scrollAnimation: Animated.Value; mapShown: boolean; setMapShown: (bool: boolean) => void}) => {
 
     const [offsetAnimation] = useState(new Animated.Value(0))
     const [clampedScroll, setClampedScroll] = useState(Animated.diffClamp(Animated.add(
@@ -73,7 +73,7 @@ export const AnimatedListHeader = ({scrollAnimation, setMapShown, mapShown}: {sc
     return (
         <Animated.View onLayout={onLayout} style={[styles.container,{transform: [{translateY: navbarTranslate}]}]}>
 <View style={{marginHorizontal: LISTMARGIN}}>
-<HeaderInput/>
+<HeaderInput location={location}/>
 <HeaderFilterButtons filterButtons={filterButtons}/>
 </View>
 <Divider style={{backgroundColor: theme["color-primary-500"]}}/>
@@ -94,6 +94,6 @@ const styles = StyleSheet.create({
       right:0, 
       left:0, 
       zIndex:1000, 
-      height: 250, 
+      height: 190, 
       backgroundColor: "white"}
 })

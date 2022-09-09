@@ -7,21 +7,26 @@ import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 import {theme} from './theme'
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
+  const queryClient = new QueryClient();
 
   if (!isLoadingComplete) {
     return null;
   } else {
     return (
+      <QueryClientProvider client={queryClient}>
       <ApplicationProvider {...eva} theme={theme}>
       <SafeAreaProvider>
         <Navigation colorScheme={colorScheme} />
         <StatusBar />
       </SafeAreaProvider>
       </ApplicationProvider>
+      </QueryClientProvider>
+
     );
   }
 }

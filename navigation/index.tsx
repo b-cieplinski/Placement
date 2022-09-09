@@ -11,9 +11,11 @@ import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 import {theme} from '../theme'
 
+
 import AccountScreen from '../screens/AccountScreen';
 import SavedScreen from '../screens/SavedScreen';
 import SearchScreen from '../screens/SearchScreen';
+import FindLocationScreen from "../screens/FindLocationsScreen"
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
@@ -41,6 +43,10 @@ function RootNavigator() {
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
 
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
+        <Stack.Screen
+            name="FindLocations"
+            component={FindLocationScreen}
+            options={{headerShown: false}}/>
 
       </Stack.Group>
     </Stack.Navigator>
